@@ -1,6 +1,6 @@
 import datetime
 
-from Practica2.persona import Persona
+from .persona import Persona
 
 
 class Estudiante(Persona):

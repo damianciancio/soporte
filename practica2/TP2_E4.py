@@ -1,4 +1,4 @@
-from Practica2.estudiante import Estudiante
+from .estudiante import Estudiante
 
 p = Estudiante("Damian", 21, "M", 75, 1.70)
 print(p.name)

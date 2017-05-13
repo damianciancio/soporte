@@ -1,4 +1,4 @@
-from Ejercicio4 import Estudiante
+from .Ejercicio4 import Estudiante
 
 def buid_dictionary(l):
     dic = {}

@@ -1,4 +1,4 @@
-from Ejercicio3 import Persona
+from .Ejercicio3 import Persona
 
 import datetime
 

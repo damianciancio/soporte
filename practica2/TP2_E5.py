@@ -1,5 +1,4 @@
-from Practica2.estudiante import Estudiante
-
+from .estudiante import Estudiante
 lista = []
 for estudiante in range(3):
     a = Estudiante('asd', 12, 'm', 123, 34, input('Carrera',))
