@@ -4,4 +4,4 @@ def max(a, b):
     else :
         return (b)
 
-print("El valor mayor es: ", max(a=int(input("Primer numero: ")),b=int(input("Segundo numero: "))))
+print("El valor mayor es : ", max(a=int(input("Primer numero: ")),b=int(input("Segundo numero: "))))
