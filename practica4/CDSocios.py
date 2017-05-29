@@ -97,5 +97,68 @@ class CDSocios():
             raise Exception("Error al conectar a la base de datos")
         return encontrado
 
+    def anterior(self,id):
+        consulta = "select * from socios m " \
+                   "where m.idsocio = (select min(idsocio) from socios s " \
+                   "where s.idsocio < %s);"
+        encontrado = None
+        try:
+            datos = AccesoDatos()
+            cur = datos.conectar()
+            cur.execute(consulta,(id))
+            d = cur.fetchone()
+            encontrado = Socio(d[1],d[2],d[3],d[0])
+            datos.desconectar()
+        except OperationalError as e:
+            raise Exception("ERROR FATAL")
+        except Exception as a:
+            raise Exception("Error al conectar a la base de datos")
+        return encontrado
+
+    def primero(self,id):
+        consulta = "select min(idsocio) from socios"
+        encontrado = None
+        try:
+            datos = AccesoDatos()
+            cur = datos.conectar()
+            cur.execute(consulta,(id))
+            d = cur.fetchone()
+            encontrado = Socio(d[1],d[2],d[3],d[0])
+            datos.desconectar()
+        except OperationalError as e:
+            raise Exception("ERROR FATAL")
+        except Exception as a:
+            raise Exception("Error al conectar a la base de datos")
+        return encontrado
+
+    def ultimo(self,id):
+        consulta = "select max(idsocio) from socios"
+        encontrado = None
+        try:
+            datos = AccesoDatos()
+            cur = datos.conectar()
+            cur.execute(consulta,(id))
+            d = cur.fetchone()
+            encontrado = Socio(d[1],d[2],d[3],d[0])
+            datos.desconectar()
+        except OperationalError as e:
+            raise Exception("ERROR FATAL")
+        except Exception as a:
+            raise Exception("Error al conectar a la base de datos")
+        return encontrado
 
 
+    def contarDNI(self, dniSocio):
+        consulta = "select count(*)from socios where dni=%s"
+        encontrado = None
+        try:
+            datos = AccesoDatos()
+            cur = datos.conectar()
+            cur.execute(consulta,(dniSocio))
+            encontrado = cur.fetchall()
+            datos.desconectar()
+        except OperationalError as e:
+            raise Exception("ERROR FATAL")
+        except Exception as a:
+            raise Exception("Error al conectar a la base de datos")
+        return encontrado
