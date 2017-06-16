@@ -27,4 +27,4 @@ class CNSocios():
     def todos(self):
         return CDSocios().buscar_todos()
 
-# Test commit nro 2#
+# Test nro3 #
