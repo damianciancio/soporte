@@ -40,9 +40,7 @@ def calcular_division():
 
 """Ventana principal y algunos de sus atrubutos"""
 root = Tk()
-root.title("Calculadora prehistorica")
-# root.protocol("WM_DELETE_WINDOW",pide_cerrar) """Llama al metodo pide_cerrar para cerrar la ventana"""
-root.configure(background="lightgreen")
+root.title("Calculadora sencilla")
 
 """Frame va a contener los elementos de nuestra interfaz"""
 """bd -> define el tamaño del borde * relief -> define tipo de borde * widht y height -> dimensiones"""
