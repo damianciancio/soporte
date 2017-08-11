@@ -21,3 +21,4 @@ class AccesoDatos():
             self.conn.close()
         except Exception:
             raise
+
