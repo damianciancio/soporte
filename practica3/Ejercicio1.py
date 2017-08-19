@@ -73,12 +73,12 @@ class Practica3():
             self.cur = self.conectar()
             self.cur.execute(query)
             data = self.cur.fetchall()
-            array = []
-            for d in data:
-                array.append(Persona(d[1],d[2],d[3],d[4],d[0]))
             self.desconectar()
         except Exception:
             pass
+        array = []
+        for d in data:
+            array.append(Persona(d[1], d[2], d[3], d[4], d[0]))
         for p in array:
             print("Nombre: ", p.nombre)
             print("Fecha de Nacimiento: ", p.fechaNac)
@@ -95,8 +95,8 @@ class Practica3():
         query = "INSERT INTO persona(nombre, fechaNacimiento, dni, altura) VALUES (%s, %s, %s, %s)"
         try:
             self.cur = self.conectar()
-            print("INSIDE: ", persona.nombre, persona.fechaNac, persona.altura, persona.dni)
             self.cur.execute(query, (persona.nombre, persona.fechaNac, persona.dni, persona.altura))
+            print("Persona cargada exitosamente!")
             self.desconectar()
         except Exception:
             pass
@@ -107,10 +107,11 @@ class Practica3():
         Elimina de la base de datos una persona.
         :param persona: La persona a eliminar de la base de datos.
         """
+        query = "DELETE FROM persona WHERE idpersona = %s"
         try:
             self.conectar()
-            query = "DELETE FROM persona WHERE idpersona = %s"
             self.cur.execute(query, (persona.id))
+            print("Persona borrada exitosamente!")
             self.desconectar()
         except Exception:
             pass
@@ -122,17 +123,17 @@ class Practica3():
         :param persona: La persona a buscar segun su DNI.
         :return: La persona encontrada.
         """
+        query = "SELECT * FROM persona WHERE dni=%s"
         try:
            self.conectar()
-           query = "select * from persona where dni=%s"
            self.cur.execute(query, (persona.dni))
            d = self.cur.fetchone()
-           found = Persona(d[1],d[2],d[3],d[4],d[0])
            self.desconectar()
-           return found
         except Exception as exc:
             print(exc)
             pass
+        found = Persona(d[1], d[2], d[3], d[4], d[0])
+        return found
 
     def update_persona(self,persona):
         """
@@ -141,9 +142,9 @@ class Practica3():
         :param persona: Persona con los datos actualizados para ingresar a la base de datos.
         :return:
         """
+        query = "UPDATE persona SET nombre = %s, fechaNacimiento= %s, dni=%s, altura=%s WHERE idpersona = %s"
         try:
             self.conectar()
-            query = "update persona set nombre = %s, fechaNacimiento= %s, dni=%s, altura=%s where idpersona = %s"
             self.cur.execute(query, (persona.nombre , persona.fechaNac, persona.dni, persona.altura, persona.id))
             self.desconectar()
         except Exception:
@@ -156,9 +157,9 @@ class Practica3():
         :return: La lista de personas.
         """
         lista = []
+        query = "SELECT * FROM persona"
         try:
             self.conectar()
-            query = "select * from persona"
             self.cur.execute(query)
             lista = list(cur.fetchall())
             self.desconectar()
@@ -199,9 +200,9 @@ class Practica3():
         :param persona: Persona sobre la cual se realizara la consulta.
         :return: **********REVISAR*****************
         """
+        query = "SELECT * FROM personapeso WHERE idpersona = %s"
+        persona = self.get_persona_byDNI(persona)
         try:
-            persona = self.get_persona_byDNI(persona)
-            query = "select * from personapeso where idpersona = %s"
             self.cur = self.conectar()
             self.cur.execute(query,(persona.id))
             historialPesos = list(self.cur.fetchall())
@@ -219,8 +220,8 @@ class Practica3():
         :return:
         """
         personas= []
+        query = "SELECT * FROM persona LEFT JOIN personapeso ON persona.idpersona = personapeso.idpersona"
         try:
-            query = "select * from persona left join personapeso on persona.idpersona = personapeso.idpersona"
             self.cur = self.conectar()
             self.cur.execute(query)
             list = self.cur.fetchall()
@@ -229,7 +230,6 @@ class Practica3():
             print(e)
             pass
         for row in list:
-            # Lista con todos los objetos Persona de la base de datos.
             personas.append(Persona(row[1],row[2],row[3],row[4],row[0]))
         for row in list:
             for persona in personas:
