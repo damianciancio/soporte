@@ -18,26 +18,24 @@ class Persona():
         self.pesos = pesos
 
 class Peso():
+    idRegistroPeso = 0
     idPersona = 0
     peso = 0
     fecha = 0
-    def __init__(self,idPersona, peso, fecha):
+    def __init__(self,idPersona, fecha, peso,idRegistroPeso=None):
+        self.idRegistroPeso = idRegistroPeso
         self.idPersona = idPersona
-        self.peso = peso
         self.fecha = fecha
+        self.peso = peso
 #</editor-fold>
 
 class Practica3():
-
-    conn = None
-    cur = None
 
     def conectar(self):
         """
         Conecta a la base de datos especificada en conn.
         :return: Un cursor apuntando a la base de datos.
         """
-        global conn, cur
         self.conn = pymysql.connect(host='localhost', port=3306, user='root', password='', db='personas')
         self.cur = self.conn.cursor()
         return self.cur
@@ -161,7 +159,7 @@ class Practica3():
         try:
             self.conectar()
             self.cur.execute(query)
-            lista = list(cur.fetchall())
+            lista = list(self.cur.fetchall())
             self.desconectar()
         except Exception:
             pass
@@ -219,22 +217,26 @@ class Practica3():
         *** NO FUNCIONA BIEN - REVISAR LA LOGICA ***
         :return:
         """
-        personas= []
+        personas = []
         query = "SELECT * FROM persona LEFT JOIN personapeso ON persona.idpersona = personapeso.idpersona"
         try:
             self.cur = self.conectar()
             self.cur.execute(query)
-            list = self.cur.fetchall()
+            resultadoQuery = self.cur.fetchall()
             self.desconectar()
         except Exception as e:
             print(e)
             pass
-        for row in list:
-            personas.append(Persona(row[1],row[2],row[3],row[4],row[0]))
-        for row in list:
-            for persona in personas:
-                if row[5] == persona.id:
-                    persona.pesos.append(Peso(row[6],row[7],row[8]))
+        for row in resultadoQuery:
+            found = False
+            for per in personas:
+                if row[0] == per.id:
+                    per.pesos.append(Peso(row[0],row[6],row[7]))
+                    found = True
+            if found == False:
+                nuevaPersona = Persona(row[1],row[2],row[3],row[4],row[0])
+                nuevaPersona.pesos.append(Peso(row[0],row[6],row[7]))
+                personas.append(nuevaPersona)
         return personas
 
     def menu(self):
@@ -279,17 +281,17 @@ class Practica3():
             dni = int(input("Ingrese el numero de documento: "))
             fecha = datetime.datetime.strptime(str(input("Ingrese la fecha del nuevo peso (yyyy-mm-dd): ")), "%Y-%m-%d")
             peso = float(input("Ingrese el peso: "))
-            self.add_peso(Persona("","",dni,0),Peso(0,peso, fecha))
+            self.add_peso(Persona("","",dni,0),Peso(0, fecha, peso))
         elif (opt == 8):
             dni = int(input("\nIngrese el dni de la persona a listar: "))
             persona = self.pesos_por_persona(Persona("",None,dni,0))
-            print("\nID: ", persona.id, "Nombre: ", persona.nombre, "Fecha de Nacimiento: ", persona.fechaNac, "DNI: ", persona.dni, "Altura: ", persona.altura, "\n")
+            print("\nID: ",persona.id, "\nNombre: ",persona.nombre, "\nFecha de Nac: ",persona.fechaNac, "\nDNI: ", persona.dni, "\nAltura: ",persona.altura,"\n")
             for i in persona.pesos:
-                print("Fecha del registro: ", i.fecha, "Peso registrado: ",i.peso)
+                print("\nFecha del registro: ", i.fecha, "\nPeso registrado: ",i.peso)
         elif (opt == 9):
             personas = self.list_persona_pesos()
             for persona in personas:
-                print("ID: ",persona.id, "Nombre: ",persona.nombre, "Fecha de Nac: ",persona.fechaNac, "DNI: ", persona.dni, "Altura: ",persona.altura)
+                print("\nID: ",persona.id, "\nNombre: ",persona.nombre, "\nFecha de Nac: ",persona.fechaNac, "\nDNI: ", persona.dni, "\nAltura: ",persona.altura,"\n")
                 for peso in persona.pesos:
                     print("Fecha: ",peso.fecha, "Peso: ",peso.peso)
         else:
