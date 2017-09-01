@@ -12,9 +12,3 @@ INSERT INTO personapeso(idpersona,fecha,peso) VALUES (1,'2015-05-19',90);
 INSERT INTO personapeso(idpersona,fecha,peso) VALUES (1,'2015-05-24',88);
 INSERT INTO personapeso(idpersona,fecha,peso) VALUES (5,'2015-05-15',67);
 INSERT INTO personapeso(idpersona,fecha,peso) VALUES (5,'2015-05-17',63);
-
-select * from persona;
-
-SELECT * FROM personapeso;
-
-select * from persona left join personapeso on persona.idpersona = personapeso.idpersona;
