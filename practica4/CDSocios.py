@@ -1,7 +1,6 @@
-from AccesoDatos import *
-from socio import *
+from .AccesoDatos import *
+from .Socio import *
 from pymysql import *
-
 
 class CDSocios():
 

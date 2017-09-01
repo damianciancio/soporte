@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 
 ventana = Tk()
 marco = Frame(ventana).grid(row=0, column=0)

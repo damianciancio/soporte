@@ -36,7 +36,7 @@ class Practica3():
         Conecta a la base de datos especificada en conn.
         :return: Un cursor apuntando a la base de datos.
         """
-        self.conn = pymysql.connect(host='localhost', port=3306, user='root', password='', db='personas')
+        self.conn = pymysql.connect(host='localhost', port=3306, user='root', password='1896', db='personas')
         self.cur = self.conn.cursor()
         return self.cur
 
@@ -218,7 +218,7 @@ class Practica3():
         :return:
         """
         personas = []
-        query = "SELECT * FROM persona LEFT JOIN personapeso ON persona.idpersona = personapeso.idpersona"
+        query = "SELECT * FROM persona LEFT JOIN personapeso ON persona.idpersona = personapeso.idpersona ORDER BY persona.idpersona ASC"
         try:
             self.cur = self.conectar()
             self.cur.execute(query)
@@ -228,16 +228,33 @@ class Practica3():
             print(e)
             pass
         for row in resultadoQuery:
+            print("***SIGUIENTE FILA***\n")
             found = False
             for per in personas:
+                print("Comparando IDs: ",row[0],per.id)
                 if row[0] == per.id:
-                    per.pesos.append(Peso(row[0],row[6],row[7]))
+                    print("Match!")
+                    print("Agregando un peso a la persona: ", row[1])
+                    per.pesos.append(Peso(row[0],row[7],row[8]))
                     found = True
+                else:
+                    print("No match en la lista de personas!")
             if found == False:
+                print("No existia la persona!")
+                print("Agregando a :  ", row[1])
+                print("Agregando un peso a la persona:  ", row[1])
                 nuevaPersona = Persona(row[1],row[2],row[3],row[4],row[0])
-                nuevaPersona.pesos.append(Peso(row[0],row[6],row[7]))
+                nuevaPersona.pesos.append(Peso(row[0],row[7],row[8]))
                 personas.append(nuevaPersona)
+            print()
         return personas
+
+    def print_todo(self,personas):
+        for persona in personas:
+            print("\nID: ", persona.id, "\nNombre: ", persona.nombre, "\nFecha de Nac: ", persona.fechaNac, "\nDNI: ",
+                  persona.dni, "\nAltura: ", persona.altura, "\n")
+            for peso in persona.pesos:
+                print("Fecha: ", peso.fecha, "Peso: ", peso.peso)
 
     def menu(self):
         """
@@ -289,11 +306,7 @@ class Practica3():
             for i in persona.pesos:
                 print("\nFecha del registro: ", i.fecha, "\nPeso registrado: ",i.peso)
         elif (opt == 9):
-            personas = self.list_persona_pesos()
-            for persona in personas:
-                print("\nID: ",persona.id, "\nNombre: ",persona.nombre, "\nFecha de Nac: ",persona.fechaNac, "\nDNI: ", persona.dni, "\nAltura: ",persona.altura,"\n")
-                for peso in persona.pesos:
-                    print("Fecha: ",peso.fecha, "Peso: ",peso.peso)
+            self.print_todo(self.list_persona_pesos())
         else:
             self.menu()
 
