@@ -1,7 +1,7 @@
-from CDSocios import *
-from socio import *
+from practica5.CDSocios import *
+from practica5.Socio import *
 
 class CNSocios():
 
     def alta(self, socio):
-        if CDSocios.
+        return None

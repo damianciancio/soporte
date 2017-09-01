@@ -1,4 +1,4 @@
-from practica4.CDSocios import CDSocios
+from practica5.CDSocios import CDSocios
 
 class CNSocios():
 
