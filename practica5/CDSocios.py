@@ -1,5 +1,5 @@
-from practica4.AccesoDatos import *
-from practica4.Socio import *
+from practica5.AccesoDatos import *
+from practica5.Socio import *
 from pymysql import *
 
 class CDSocios():
@@ -69,6 +69,24 @@ class CDSocios():
             cur.execute(consulta,(idSocio))
             d = cur.fetchone()
             encontrado = Socio(d[1],d[2],d[3],d[0])
+            datos.desconectar()
+        except OperationalError as e:
+            raise Exception("ERROR FATAL")
+        except Exception as a:
+            raise Exception("Error al conectar a la base de datos")
+        return encontrado
+
+    def buscar_por_dni(self,socio):
+
+        consulta = "SELECT * FROM socios WHERE dni = %s"
+        encontrado = None
+        try:
+            datos = AccesoDatos()
+            cur = datos.conectar()
+            cur.execute(consulta,(socio.dni))
+            d = cur.fetchone()
+            if not d == None:
+                encontrado = Socio(d[1],d[2],d[3],d[0])
             datos.desconectar()
         except OperationalError as e:
             raise Exception("ERROR FATAL")
