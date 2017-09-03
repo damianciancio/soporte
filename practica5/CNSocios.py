@@ -7,7 +7,10 @@ class CNSocios():
 
     def alta(self, socio):
         if(self.validar_alta(socio)):
-            CDSocios().alta_socio(socio)
+            try:
+                CDSocios().alta_socio(socio)
+            except Exception as e:
+                raise e
 
     def validar_alta(self,socio):
         condicion = ((not self.existe_socio(socio)) & (not self.llego_al_maximo_de_socios()) & self.validar_nombre_y_apellido(socio)) ##falta validar nombre y apellido
@@ -17,10 +20,16 @@ class CNSocios():
         return self.validar_nombre_y_apellido(socio)
 
     def buscar_por_id(self,socio):
-        return CDSocios().buscar_por_id(socio.id)
+        try:
+            return CDSocios().buscar_por_id(socio.id)
+        except Exception as e:
+            raise e
 
     def buscar_por_dni(self,socio):
-        return CDSocios().buscar_por_dni(socio)
+        try:
+            return CDSocios().buscar_por_dni(socio)
+        except Exception as e:
+            raise e
 
     def existe_socio(self, socio):
         encontrado = self.buscar_por_dni(socio)
@@ -32,11 +41,15 @@ class CNSocios():
         return condicion
 
     def validar_nombre_y_apellido(self, socio):
-        condicion = not (len(socio.nombre) <= 3 | len(socio.apellido) <= 3 | len(socio.apellido) >= 25 | len(socio.apellido) >= 25)
+        longitud = len(socio.nombre)
+        condicion = ((len(socio.nombre) >= 3) & (len(socio.nombre) <= 25)) & ((len(socio.apellido) >= 3) & (len(socio.apellido) <= 25))
         return condicion
 
     def eliminar(self,socio):
-        CDSocios().baja_socio(socio)
+        try:
+            CDSocios().baja_socio(socio)
+        except Exception as e:
+            raise e
 
     def modificar(self,socio):
         if self.validar_modificacion(socio):
@@ -44,9 +57,7 @@ class CNSocios():
 
 
     def todos(self):
-        return CDSocios().buscar_todos()
-
-socio = Socio(40000005,'Luis', 'Pereyra')
-cn = CNSocios()
-
-cn.alta(socio)
+        try:
+            return CDSocios().buscar_todos()
+        except Exception as e:
+            raise e

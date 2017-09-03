@@ -1,5 +1,6 @@
 from tkinter import ttk
 from tkinter import *
+from tkinter import messagebox
 from practica5.CNSocios import CNSocios
 from practica5.Socio import Socio
 
@@ -9,11 +10,15 @@ class MainWindow():
     tree = None
 
     def refrescar(self):
-        for row in self.tree.get_children():
-            self.tree.delete(row)
-        socios = CNSocios().todos()
-        for s in socios:
-            self.tree.insert("",s.id,text=s.id,values=(s.nombre, s.apellido, s.dni))
+        try:
+            socios = CNSocios().todos()
+            for row in self.tree.get_children():
+                self.tree.delete(row)
+            socios = CNSocios().todos()
+            for s in socios:
+                self.tree.insert("",s.id,text=s.id,values=(s.nombre, s.apellido, s.dni))
+        except Exception as e:
+            pass
 
     def open_edit_window(self,isAlta):
         socio = None
@@ -37,7 +42,10 @@ class MainWindow():
         if socio == None:
             return None
         else:
-            CNSocios().eliminar(socio)
+            try:
+                CNSocios().eliminar(socio)
+            except Exception as e:
+                pass
             self.refrescar()
 
     def __init__(self):
@@ -147,11 +155,50 @@ class EditWindow():
         socio = self.map_socio_from_window()
         if not self.isAlta:
             socio.id = self.socio.id
-            CNSocios().modificar(socio)
+            try:
+                if ValidacionSocio(self).validarModificacion(socio):
+                    CNSocios().modificar(socio)
+            except Exception as e:
+                pass
         else:
-            CNSocios().alta(socio)
+            try:
+                if ValidacionSocio(self).validarAlta(socio):
+                    CNSocios().alta(socio)
+            except Exception as e:
+                pass
         self.parent.refrescar()
 
+class ValidacionSocio():
+
+    parent = None
+    cn= None
+    def __init__(self, parent):
+        self.parent = parent
+        self.cn = CNSocios()
+
+    def validarAlta(self, socio):
+        if self.cn.existe_socio(socio):
+            print("El socio ya existe.")
+            return False
+        if self.cn.llego_al_maximo_de_socios():
+            print("Error","Se llego al maximo de socios")
+            return False
+        if not self.cn.validar_nombre_y_apellido(socio):
+            print("Error","El nombre y el apellido deben tener al menos 3 y mas de 25 caracteres cada uno")
+            return False
+        if len(socio.dni) == 0:
+            print("Ingrese dni")
+            return False
+        return True
+
+    def validarModificacion(self,socio):
+        if not self.cn.validar_nombre_y_apellido(socio):
+            print("Error","El nombre y el apellido deben tener al menos 3 y mas de 25 caracteres cada uno")
+            return False
+        if len(socio.dni) == 0:
+            print("Ingrese dni")
+            return False
+        return True
 
 
 
