@@ -4,6 +4,10 @@ from tkinter import messagebox
 from practica5.CNSocios import CNSocios
 from practica5.Socio import Socio
 
+## Integrantes del grupo:
+# Ville, Gabriel
+# Rodríguez, Emiliano
+# Ciancio, Damián
 
 class MainWindow():
 
@@ -18,7 +22,7 @@ class MainWindow():
             for s in socios:
                 self.tree.insert("",s.id,text=s.id,values=(s.nombre, s.apellido, s.dni))
         except Exception as e:
-            pass
+            print(str(e))
 
     def open_edit_window(self,isAlta):
         socio = None
@@ -45,7 +49,7 @@ class MainWindow():
             try:
                 CNSocios().eliminar(socio)
             except Exception as e:
-                pass
+                print(str(e))
             self.refrescar()
 
     def __init__(self):
@@ -159,13 +163,13 @@ class EditWindow():
                 if ValidacionSocio(self).validarModificacion(socio):
                     CNSocios().modificar(socio)
             except Exception as e:
-                pass
+                print(str(e))
         else:
             try:
                 if ValidacionSocio(self).validarAlta(socio):
                     CNSocios().alta(socio)
             except Exception as e:
-                pass
+                print(str(e))
         self.parent.refrescar()
 
 class ValidacionSocio():
